@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latihan State</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    class FuelStation extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          fuelType: 'premium',
+          pricePerLiter: {
+            premium: 10000,
+            pertalite: 12000,
+            pertamax: 15000
+          },
+          liters: 0,
+          totalPrice: 0
+        };
+      }
+      handleFuelTypeChange = (event) => {
+        const newFuelType = event.target.value;
+        this.setState({ fuelType: newFuelType }, this.calculateTotalPrice);
+      }
+      handleLitersChange = (event) => {
+        const newLiters = parseInt(event.target.value);
+        this.setState({ liters: newLiters }, this.calculateTotalPrice);
+      }
+      calculateTotalPrice = () => {
+        const { fuelType, pricePerLiter, liters } = this.state;
+        const totalPrice = pricePerLiter[fuelType] * liters;
+        this.setState({ totalPrice });
+      }
+      render() {
+        return (
+          <div>
+            <h2>Fuel Station</h2>
+            <form>
+              <label>
+                Fuel Type:
+                <select value={this.state.fuelType} onChange={this.handleFuelTypeChange}>
+                  <option value="premium">Premium</option>
+                  <option value="pertalite">Pertalite</option>
+                  <option value="pertamax">Pertamax</option>
+                </select>
+              </label>
+              <br />
+              <label>
+                Liters:
+                <input type="number" value={this.state.liters} onChange={this.handleLitersChange} />
+              </label>
+              <br />
+            </form>
+            <h4>Total Price: Rp {this.state.totalPrice.toLocaleString()}</h4>
+          </div>
+        );
+      }
+    }
+    ReactDOM.render(<FuelStation />, document.getElementById('root'));
+  </script>
+</body>
+</html>
